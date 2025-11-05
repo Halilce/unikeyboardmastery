@@ -26,6 +26,9 @@
     <title>Katip Test Programı</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     <style>
         :root {
             --primary-red: #dc3545;
@@ -537,8 +540,21 @@
                         <input type="file" class="form-control"  style="padding: 5px;" id="fileInput" accept=".txt">
                     </div>
                     <button class="btn btn-primary w-100 btn-sm" style="padding: 10px;" onclick="importText()">
-                        <i class="fas fa-upload me-2"></i>Dosyayı Yükle
+                        <i class="fas fa-upload me-2"></i>Tek Dosya Yükle
                     </button>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-folder-open me-2"></i>veya Klasörden Yükle</label>
+                        <input type="file" class="form-control mb-2" style="padding: 5px;" id="folderInput" webkitdirectory directory multiple>
+                    </div>
+                    <button class="btn btn-success w-100 btn-sm mb-2" style="padding: 10px;" onclick="loadFilesFromFolder()">
+                        <i class="fas fa-folder-open me-2"></i>Klasör Seç ve Dosyaları Listele
+                    </button>
+                    <select class="form-select" id="folderFileSelection" onchange="loadFileFromFolder()" style="display: none;">
+                        <option value="">Önce klasör seçin...</option>
+                    </select>
                 </div>
             </div>
 
@@ -922,17 +938,154 @@
             }
         }
 
+        // Klasör seçici için değişkenler
+        let selectedFolderFiles = {};
+
+        function loadFilesFromFolder() {
+            const folderInput = document.getElementById('folderInput');
+            const files = folderInput.files;
+            
+            if (!files || files.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Klasör Seçin',
+                    text: 'Lütfen bir klasör seçin!',
+                    confirmButtonColor: '#dc3545'
+                });
+                return;
+            }
+
+            const select = document.getElementById('folderFileSelection');
+            selectedFolderFiles = {};
+            let txtFileCount = 0;
+
+            // Tüm dosyaları tara, sadece .txt olanları al
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.name.toLowerCase().endsWith('.txt')) {
+                    selectedFolderFiles[file.name] = file;
+                    txtFileCount++;
+                }
+            }
+
+            if (txtFileCount === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Dosya Bulunamadı!',
+                    html: 'Seçilen klasörde <strong>.txt</strong> dosyası bulunamadı!<br><small>Lütfen .txt uzantılı dosyalar içeren bir klasör seçin.</small>',
+                    confirmButtonColor: '#dc3545'
+                });
+                select.style.display = 'none';
+                return;
+            }
+
+            // Dropdown'u göster ve doldur
+            select.style.display = 'block';
+            select.innerHTML = '<option value="">📄 Dosya seçin... (' + txtFileCount + ' dosya)</option>';
+            
+            // Dosya adlarını alfabetik sırala ve ekle
+            const fileNames = Object.keys(selectedFolderFiles).sort();
+            
+            for (let fileName of fileNames) {
+                const option = document.createElement('option');
+                option.value = fileName;
+                option.textContent = '📝 ' + fileName;
+                select.appendChild(option);
+            }
+
+            // Başarı mesajı
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                html: `<strong>${txtFileCount}</strong> adet .txt dosyası bulundu ve listelendi.`,
+                timer: 2000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+
+        function loadFileFromFolder() {
+            const select = document.getElementById('folderFileSelection');
+            const fileName = select.value;
+            
+            if (!fileName) return;
+
+            const file = selectedFolderFiles[fileName];
+            if (!file) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Dosya bulunamadı!',
+                    confirmButtonColor: '#dc3545'
+                });
+                return;
+            }
+
+            // Dosyayı oku
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const text = e.target.result;
+                document.getElementById('sourceText').textContent = text;
+                
+                // İstatistikler
+                const charCount = text.length;
+                const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+                const lineCount = text.split('\n').length;
+                
+                // Başarı mesajı
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Dosya Yüklendi!',
+                    html: `
+                        <div style="text-align: left; font-size: 14px;">
+                            <strong>📄 ${fileName}</strong><br>
+                            <hr>
+                            📊 <strong>İstatistikler:</strong><br>
+                            • ${charCount.toLocaleString()} karakter<br>
+                            • ${wordCount.toLocaleString()} kelime<br>
+                            • ${lineCount.toLocaleString()} satır
+                        </div>
+                    `,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'Tamam'
+                });
+            };
+            
+            reader.onerror = function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Okuma Hatası!',
+                    text: 'Dosya okunurken bir hata oluştu!',
+                    confirmButtonColor: '#dc3545'
+                });
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
         function startTest() {
             const name = document.getElementById('candidateName').value;
             const tcNo = document.getElementById('candidateID').value;
 
             if (!name || !tcNo) {
-                alert('Lütfen ad soyad ve Öğrenci numaranızı girin!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eksik Bilgi!',
+                    text: 'Lütfen ad soyad ve Öğrenci numaranızı girin!',
+                    confirmButtonColor: '#dc3545'
+                });
                 return;
             }
 
             if (tcNo.length !== 11) {
-                alert('Öğrenci numarası 11 haneli olmalıdır!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hatalı Numara!',
+                    text: 'Öğrenci numarası 11 haneli olmalıdır!',
+                    confirmButtonColor: '#dc3545'
+                });
                 return;
             }
 
@@ -944,17 +1097,32 @@
                 const totalSeconds = (customMinutes * 60) + customSeconds;
 
                 if (totalSeconds === 0) {
-                    alert('Lütfen geçerli bir süre girin! (En az 1 saniye)');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Geçersiz Süre!',
+                        text: 'Lütfen geçerli bir süre girin! (En az 1 saniye)',
+                        confirmButtonColor: '#dc3545'
+                    });
                     return;
                 }
 
                 if (customMinutes > 180) {
-                    alert('Maksimum süre 180 dakikadır!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Süre Aşımı!',
+                        text: 'Maksimum süre 180 dakikadır!',
+                        confirmButtonColor: '#dc3545'
+                    });
                     return;
                 }
 
                 if (customSeconds > 59) {
-                    alert('Saniye değeri 0-59 arasında olmalıdır!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hatalı Saniye!',
+                        text: 'Saniye değeri 0-59 arasında olmalıdır!',
+                        confirmButtonColor: '#dc3545'
+                    });
                     return;
                 }
             }
@@ -1086,20 +1254,20 @@
         });
 
         function showCopyPasteWarning() {
-            // Create temporary alert
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-danger';
-            alertDiv.style.position = 'fixed';
-            alertDiv.style.top = '20px';
-            alertDiv.style.right = '20px';
-            alertDiv.style.zIndex = '9999';
-            alertDiv.style.minWidth = '300px';
-            alertDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i><strong>Uyarı:</strong> Kopyala/Yapıştır işlemleri yasaktır!';
-            document.body.appendChild(alertDiv);
-
-            setTimeout(function () {
-                alertDiv.remove();
-            }, 3000);
+            // SweetAlert2 toast bildirimi
+            Swal.fire({
+                icon: 'error',
+                title: 'Yasak İşlem!',
+                text: 'Kopyala/Yapıştır işlemleri yasaktır!',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#dc3545',
+                color: '#fff',
+                iconColor: '#fff'
+            });
         }
 
         document.getElementById('testArea').addEventListener('input', function (e) {
