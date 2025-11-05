@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katip Test Programı</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #dc3545;
+            --light-red: #ff6b7a;
+            --dark-red: #c82333;
+            --bg-light: #fff5f5;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            background: white;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--light-red) 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+            background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        #testArea {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px solid var(--primary-red);
+            border-radius: 10px;
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        #sourceText {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.8;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, var(--bg-light) 0%, white 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--light-red);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        .stats-label {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .announcement {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .keyboard-indicator {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary-red);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .timer {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .status-online {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats-number {
+                font-size: 1.8rem;
+            }
+            
+            .comparison-container {
+                font-size: 14px !important;
+                padding: 10px !important;
+            }
+            
+            .char-correct,
+            .char-wrong,
+            .char-missing {
+                padding: 1px !important;
+                font-size: 14px !important;
+            }
+
+            .alert.alert-danger {
+                min-width: 250px !important;
+                font-size: 14px !important;
+                right: 10px !important;
+                left: 10px !important;
+            }
+        }
+
+        .comparison-container {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 2;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            white-space: pre-wrap;
+            max-width: 100%;
+        }
+
+        .char-correct {
+            color: #28a745;
+            background: #d4edda;
+            padding: 2px;
+            display: inline;
+        }
+
+        .char-wrong {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 2px;
+            text-decoration: line-through;
+            display: inline;
+            cursor: help;
+        }
+
+        .char-missing {
+            color: #856404;
+            background: #fff3cd;
+            padding: 2px;
+            font-weight: bold;
+            display: inline;
+        }
+
+        .comparison-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .comparison-legend span {
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 576px) {
+            .comparison-legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .comparison-legend span {
+                font-size: 13px;
+            }
+
+            .alert.alert-danger {
+                font-size: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-keyboard me-3"></i>Katip Test Programı</h1>
+            <p class="mb-0">Zabıt Katipliği ve İcra Katipliği Sınavları İçin 10 Parmak Yazma Programı</p>
+        </div>
+
+        <!-- Server Status -->
+        <div class="card">
+            <div class="card-body">
+                <span class="status-online me-2"></span>
+                <strong>Sunucu Durumu:</strong> <span id="serverStatus" class="text-success">Bağlı</span>
+                <button class="btn btn-sm btn-primary float-end" onclick="connectServer()">
+                    <i class="fas fa-sync-alt"></i> Yeniden Bağlan
+                </button>
+            </div>
+        </div>
+
+        <!-- Announcements -->
+        <div id="announcementsContainer"></div>
+
+        <div class="row">
+            <!-- Left Panel - Settings & Info -->
+            <div class="col-lg-12">
+                <!-- Candidate Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user me-2"></i>Aday Bilgileri
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Ad Soyad</label>
+                            <input type="text" class="form-control" id="candidateName" placeholder="Adınızı ve soyadınızı girin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Öğrenci Numarası</label>
+                            <input type="text" class="form-control" id="candidateID" placeholder="11 haneli TC No" maxlength="11">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sınav Türü</label>
+                            <select class="form-select" id="examType">
+                                <option value="zabit">Zabıt Katipliği</option>
+                                <option value="icra">İcra Katipliği</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard Selection -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-keyboard me-2"></i>Klavye Ayarları
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Klavye Türü</label>
+                            <select class="form-select" id="keyboardType" onchange="changeKeyboard()">
+                                <option value="F">F Klavye</option>
+                                <option value="Q">Q Klavye</option>
+                            </select>
+                        </div>
+                        <div class="keyboard-indicator" id="keyboardIndicator">F Klavye Aktif</div>
+                    </div>
+                </div>
+
+                <!-- Time Limit Setting -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clock me-2"></i>Süre Ayarları
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Test Süresi</label>
+                            <select class="form-select" id="timeLimit" onchange="toggleCustomTime()">
+                                <option value="5">5 Dakika</option>
+                                <option value="10">10 Dakika</option>
+                                <option value="15" selected>15 Dakika</option>
+                                <option value="20">20 Dakika</option>
+                                <option value="30">30 Dakika</option>
+                                <option value="45">45 Dakika</option>
+                                <option value="60">60 Dakika</option>
+                                <option value="custom">Özel Süre Gir</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="customTimeDiv" style="display: none;">
+                            <label class="form-label">Özel Süre</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label" style="font-size: 12px;">Dakika</label>
+                                    <input type="number" class="form-control" id="customMinutes" min="0" max="180" value="0" placeholder="Dk">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" style="font-size: 12px;">Saniye</label>
+                                    <input type="number" class="form-control" id="customSeconds" min="0" max="59" value="0" placeholder="Sn">
+                                </div>
+                            </div>
+                            <small class="text-muted">Maksimum: 180 dakika</small>
+                        </div>
+                        <div class="alert alert-info mb-0" style="font-size: 12px; padding: 10px;">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Seçilen süre sonunda test otomatik sonlanır
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Import Text -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-import me-2"></i>Metin Seçimi
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Metin Türü</label>
+                            <select class="form-select mb-2" id="textType" onchange="updateTextSelection()">
+                                <option value="legal">Hukuki Metinler (Sınav İçin)</option>
+                                <option value="practice">Klavye Çalışma Soruları</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="legalTextDiv">
+                            <label class="form-label">Hazır Metin Seç</label>
+                            <select class="form-select mb-2" id="textSelection" onchange="loadSelectedText()">
+                                <option value="0">Metin 1 - Adalet Bakanlığı Tanıtım</option>
+                                <option value="1">Metin 2 - Zabıt Katipliği Görevleri</option>
+                                <option value="2">Metin 3 - İcra Katipliği Görevleri</option>
+                                <option value="3">Metin 4 - Mahkeme Kararı Örneği</option>
+                                <option value="4">Metin 5 - İcra Takip Dilekçesi</option>
+                                <option value="5">Metin 6 - Duruşma Tutanağı</option>
+                                <option value="6">Metin 7 - İhtarname Metni</option>
+                                <option value="7">Metin 8 - Temyiz Dilekçesi</option>
+                                <option value="8">Metin 9 - İtiraz Dilekçesi</option>
+                                <option value="9">Metin 10 - Haciz Tutanağı</option>
+                                <option value="10">Metin 11 - Vekalet Belgesi</option>
+                                <option value="11">Metin 12 - İfade Tutanağı</option>
+                                <option value="12">Metin 13 - Keşif Tutanağı</option>
+                                <option value="13">Metin 14 - Bilirkişi Raporu</option>
+                                <option value="14">Metin 15 - Tebligat Mazbatası</option>
+                                <option value="15">Metin 16 - Ödeme Emri</option>
+                                <option value="16">Metin 17 - İcra İnkar Tazminatı</option>
+                                <option value="17">Metin 18 - Şikayet Dilekçesi</option>
+                                <option value="18">Metin 19 - Dava Dilekçesi</option>
+                                <option value="19">Metin 20 - Cevap Dilekçesi</option>
+                                <option value="20">Metin 21 - İstinaf Dilekçesi</option>
+                                <option value="21">Metin 22 - Feragat Dilekçesi</option>
+                                <option value="22">Metin 23 - Karar Düzeltme</option>
+                                <option value="23">Metin 24 - Tedbir Talebi</option>
+                                <option value="24">Metin 25 - İnfaz Talebi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="practiceTextDiv" style="display: none;">
+                            <label class="form-label">Klavye Çalışma Soruları</label>
+                            <select class="form-select mb-2" id="practiceSelection" onchange="loadSelectedText()">
+                                <option value="25">Egzersiz 1 - Sol El Ana Tuşlar (asdf)</option>
+                                <option value="26">Egzersiz 2 - Sağ El Ana Tuşlar (jkl)</option>
+                                <option value="27">Egzersiz 3 - İki El Ana Tuşlar</option>
+                                <option value="28">Egzersiz 4 - Üst Sıra (qwert yuıop)</option>
+                                <option value="29">Egzersiz 5 - Alt Sıra (zxcvb nm)</option>
+                                <option value="30">Egzersiz 6 - Büyük Harfler & Shift</option>
+                                <option value="31">Egzersiz 7 - Rakamlar 1-5</option>
+                                <option value="32">Egzersiz 8 - Rakamlar 6-0</option>
+                                <option value="33">Egzersiz 9 - Tüm Rakamlar</option>
+                                <option value="34">Egzersiz 10 - Noktalama İşaretleri</option>
+                                <option value="35">Egzersiz 11 - Parantez & Özel Karakterler</option>
+                                <option value="36">Egzersiz 12 - Türkçe Karakterler (çğıöşü)</option>
+                                <option value="37">Egzersiz 13 - Türkçe Kelimeler</option>
+                                <option value="38">Egzersiz 14 - Tüm Parmaklar Karışık</option>
+                                <option value="39">Egzersiz 15 - Hızlı Parmak Geçişleri</option>
+                                <option value="40">Egzersiz 16 - Çift Harf Kombinasyonları</option>
+                                <option value="41">Egzersiz 17 - Zor Kombinasyonlar</option>
+                                <option value="42">Egzersiz 18 - Sık Kullanılan Kelimeler</option>
+                                <option value="43">Egzersiz 19 - Uzun Kelimeler</option>
+                                <option value="44">Egzersiz 20 - Tüm Tuşlar Final</option>
+                            </select>
+                        </div>
+                                <option value="p1">Seviye 2 - Çift Tuş Kombinasyonları</option>
+                                <option value="p2">Seviye 3 - Basit Heceler</option>
+                                <option value="p3">Seviye 4 - Üç Harfli Kelimeler</option>
+                                <option value="p4">Seviye 5 - Büyük Küçük Harf Karışık</option>
+                                <option value="p5">Seviye 6 - Kelime Çeşitleri</option>
+                                <option value="p6">Seviye 7 - Rakam ve Harf Karışık</option>
+                                <option value="p7">Seviye 8 - Özel Karakterler</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">veya Dosyadan Yükle</label>
+                            <input type="file" class="form-control" id="fileInput" accept=".txt">
+                        </div>
+                        <button class="btn btn-primary w-100 btn-sm" onclick="importText()">
+                            <i class="fas fa-upload me-2"></i>Dosya Yükle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-2"></i>Anlık İstatistikler
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="stats-box">
+                                    <div class="stats-number" id="charCount">0</div>
+                                    <div class="stats-label">Karakter</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stats-box">
+                                    <div class="stats-number" id="wpm">0</div>
+                                    <div class="stats-label">Kelime/Dk</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stats-box">
+                                    <div class="stats-number" id="accuracy">100</div>
+                                    <div class="stats-label">Doğruluk %</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stats-box">
+                                    <div class="stats-number" id="errorCount">0</div>
+                                    <div class="stats-label">Hata</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Test Area -->
+            <div class="col-lg-12">
+                <!-- Timer -->
+                <div class="timer mb-3">
+                    <i class="fas fa-clock me-2"></i>
+                    <span id="timer">00 Dk 00 Sn</span>
+                </div>
+
+                <!-- Source Text -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-text-height me-2"></i>Örnek Metin
+                    </div>
+                    <div class="card-body">
+                        <div id="sourceText">Adalet Bakanlığı tarafından düzenlenen zabıt katipliği ve icra katipliği sınavları için hazırlanmış bu program, adayların yazma hızlarını ve doğruluklarını test etmelerine yardımcı olmaktadır. Program, F ve Q klavye düzenlerini desteklemekte olup, sınav koşullarına uygun şekilde tasarlanmıştır.</div>
+                    </div>
+                </div>
+
+                <!-- Test Area -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-edit me-2"></i>Yazma Alanı</span>
+                        <div>
+                            <button class="btn btn-success btn-sm" onclick="startTest()" id="startBtn">
+                                <i class="fas fa-play me-2"></i>Başla
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="resetTest()" id="resetBtn">
+                                <i class="fas fa-redo me-2"></i>Sıfırla
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="testArea" rows="10" placeholder="Testi başlatmak için 'Başla' düğmesine tıklayın..." disabled oncopy="return false" oncut="return false" onpaste="return false" ondrop="return false" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                        <div class="alert alert-warning mt-2 mb-0" style="font-size: 12px; padding: 8px;">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            <strong>Güvenlik:</strong> Kopyala, yapıştır ve sürükle-bırak işlemleri devre dışı bırakılmıştır.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mb-3">
+                    <button class="btn btn-primary btn-lg" onclick="finishTest()" id="finishBtn" disabled>
+                        <i class="fas fa-flag-checkered me-2"></i>Testi Bitir
+                    </button>
+                    <button class="btn btn-success btn-lg" onclick="savePDF()" id="savePDFBtn" disabled>
+                        <i class="fas fa-file-pdf me-2"></i>PDF Kaydet
+                    </button>
+                    <button class="btn btn-primary btn-lg" onclick="saveTXT()" id="saveTXTBtn" disabled>
+                        <i class="fas fa-file-alt me-2"></i>TXT Kaydet
+                    </button>
+                </div>
+
+                <!-- Results -->
+                <div id="resultsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let testStarted = false;
+        let startTime;
+        let timerInterval;
+        let totalChars = 0;
+        let errors = 0;
+        let currentKeyboard = 'F';
+
+        // Keyboard practice exercises
+        const practiceExercises = [
+            // Seviye 1 - Tek Tuş Tekrarı
+            "aaa aa aaaa a sss ss ssss s ddd dd dddd d fff ff ffff f jjj jj jjjj j kkk kk kkkk k lll ll llll l ggg gg gggg g hhh hh hhhh h eee ee eeee e iii ii iiii i rrr rr rrrr r uuu uu uuuu u ttt tt tttt t yyy yy yyyy y nnn nn nnnn n mmm mm mmmm m vvv vv vvvv v bbb bb bbbb b ccc cc cccc c xxx xx xxxx x zzz zz zzzz z qqq qq qqqq q www ww wwww w ppp pp pppp p ooo oo oooo o",
+            
+            // Seviye 2 - Çift Tuş Kombinasyonları
+            "as as as sa sa sa ad ad ad da da da af af af fa fa fa aj aj aj ja ja ja ak ak ak ka ka ka al al al la la la df df df fd fd fd dg dg dg gd gd gd fj fj fj jf jf jf jk jk jk kj kj kj kl kl kl lk lk lk gh gh gh hg hg hg jh jh jh hj hj hj sd sd sd ds ds ds fg fg fg gf gf gf hj hj hj jh jh jh kl kl kl lk lk lk",
+            
+            // Seviye 3 - Basit Heceler
+            "al al al el el el il il il ol ol ol ul ul ul ar ar ar er er er ir ir ir or or or ur ur ur at at at et et et it it it ot ot ot ut ut ut an an an en en en in in in on on on un un un am am am em em em im im im om om om um um um ak ak ak ek ek ek ik ik ik ok ok ok uk uk uk",
+            
+            // Seviye 4 - Üç Harfli Kelimeler
+            "ali ali ali can can can den den den gel gel gel var var var yok yok yok son son son ben ben ben sen sen sen kim kim kim bir bir bir iki iki iki üç üç üç dört dört dört beş beş beş alt alt alt üst üst üst ara ara ara son son son iyi iyi iyi kötü kötü kötü dal dal dal göl göl göl",
+            
+            // Seviye 5 - Büyük Küçük Harf Karışık
+            "Ali ALi ALİ aLi aLİ Ahi AHi AHİ ahi aHi aşı AŞI aşı Aşı asi ASi ASİ Asi aSi Can CAN caN cAn Den DEN deN dEn Gel GEL geL gEl Var VAR vaR vAr Ben BEN beN bEn Sen SEN seN sEn Kim KIM kiM kİm halil HALİL HaLiL HalİL hALİL haliL Ahmet AHMET aHMET AhMeT Ayşe AYŞE aYŞE AyŞe",
+            
+            // Seviye 6 - Kelime Çeşitleri
+            "mahkeme MAHKEME Mahkeme MaHkEmE adalet ADALET Adalet AdAlEt zabıt ZABIT Zabıt ZaBıT icra İCRA İcra İCrA katip KATİP Katip KaTiP duruşma DURUŞMA Duruşma DuRuŞmA karar KARAR Karar KaRaR dava DAVA Dava DaVa dilekçe DİLEKÇE Dilekçe DiLeKçE tutanak TUTANAK Tutanak TuTaNaK",
+            
+            // Seviye 7 - Rakam ve Harf Karışık
+            "1a 2b 3c 4d 5e 6f 7g 8h 9i 0j a1 b2 c3 d4 e5 f6 g7 h8 i9 j0 12 23 34 45 56 67 78 89 90 11 22 33 44 55 66 77 88 99 00 abc123 xyz789 test123 user456 admin789 pass2024 kod1234 no5678 tc12345 dosya999 madde10 bent20 fıkra30 sayı40",
+            
+            // Seviye 8 - Özel Karakterler
+            "! ? . , : ; ' \" - _ ( ) [ ] { } / \\ @ # $ % & * + = < > | ~ ` a! b? c. d, e: f; g' h\" i- j_ k( l) m[ n] o{ p} q/ r\\ s@ t# u$ v% w& x* y+ z= A! B? C. D, E: F; G' H\" I- J_ K( L) M[ N] O{ P} Q/ R\\ S@ T# U$ V% W& X* Y+ Z="
+        ];
+
+        // Text samples for testing
+        const textSamples = [
+            // Metin 1 - Adalet Bakanlığı Tanıtım
+            "Adalet Bakanlığı tarafından düzenlenen zabıt katipliği ve icra katipliği sınavları için hazırlanmış bu program, adayların yazma hızlarını ve doğruluklarını test etmelerine yardımcı olmaktadır. Program, F ve Q klavye düzenlerini desteklemekte olup, sınav koşullarına uygun şekilde tasarlanmıştır. Katip adayları bu programı kullanarak kendilerini sınava hazırlayabilir ve yazma becerilerini geliştirebilirler.",
+            
+            // Metin 2 - Zabıt Katipliği Görevleri
+            "Zabıt katipleri, mahkemelerde duruşma tutanaklarının tutulması, karar ve ilam metinlerinin hazırlanması, dosya kayıtlarının düzenlenmesi gibi önemli görevleri yerine getirmektedir. Ayrıca tebligat işlemlerinin takibi, dava dosyalarının arşivlenmesi ve dijital ortamda belge yönetimi de zabıt katiplerinin sorumluluk alanına girmektedir. Bu görevlerin yerine getirilmesinde hız ve doğruluk büyük önem taşımaktadır.",
+            
+            // Metin 3 - İcra Katipliği Görevleri
+            "İcra katipler, icra ve iflas dairelerinde çalışarak alacaklıların haklarının korunması ve borçluların yasal yükümlülüklerinin takibi konusunda önemli görevler üstlenmektedir. Ödeme emirlerinin düzenlenmesi, haciz işlemlerinin gerçekleştirilmesi, dosya takipleri ve muhasebe kayıtlarının tutulması icra katiplerinin başlıca görevleri arasındadır. İcra katipleri aynı zamanda taraflar arasındaki yazışmaları da yürütmektedir.",
+            
+            // Metin 4 - Mahkeme Kararı Örneği
+            "Mahkememizce yapılan yargılama sonucunda, davalının davacıya olan borcu sabit görülmüş ve alacağın tahsili hususunda davacı haklı bulunmuştur. Bu nedenle davanın kabulüne, davalının davacıya on bin Türk Lirası alacağı ile birlikte yasal faiz ve yargılama giderlerini ödemesine, vekalet ücretinin takdiren belirlenmesine karar verilmiştir. Kararın kesinleşmesini müteakip infaz işlemlerine başlanacaktır.",
+            
+            // Metin 5 - İcra Takip Dilekçesi
+            "İcra Müdürlüğüne, borçlu Ahmet Yılmaz aleyhine takip talebinde bulunuyorum. Borçlu ile aramızda imzalanmış sözleşme gereği, tarafıma ödenmesi gereken yirmi beş bin Türk Lirası alacağım bulunmaktadır. Ödeme vadesinin geçmesine rağmen borçlu borcunu ödememiştir. Bu nedenle yasal takibat başlatılmasını, gerekli işlemlerin yerine getirilmesini ve alacağımın tamamının tahsil edilmesini saygılarımla arz ederim.",
+            
+            // Metin 6 - Duruşma Tutanağı
+            "Duruşma açıldı. Davacı vekili hazır, davalı vekili hazır. Duruşmaya devam olundu. Davacı vekili beyanlarını tekrar etti ve dava dilekçesindeki taleplerde ısrar ettiğini bildirdi. Davalı vekili müvekkilinin borcunun bulunmadığını, iddiaların asılsız olduğunu beyan etti. Mahkememizce tarafların iddia ve savunmaları dinlendi. Dosya incelendi. Hüküm için karar gününün tayin edilmesi uygun görüldü. Duruşmaya son verildi.",
+            
+            // Metin 7 - İhtarname Metni
+            "Muhatap, tarafınızla aramızdaki sözleşme gereği ödemeniz gereken bedeli vadesinde ödemediğinizden dolayı işbu ihtarname ile son defa ödeme için uyarılmaktasınız. İhtarnamenin tebliğinden itibaren on gün içerisinde borcunuzun tamamını ödemeniz gerekmektedir. Aksi takdirde yasal yollara başvurulacak ve tüm masraflar tarafınıza yansıtılacaktır. Gereğini bilgilerinize sunarım.",
+            
+            // Metin 8 - Temyiz Dilekçesi
+            "Yargıtay İlgili Dairesine, aleyhimize verilen karar usul ve yasaya aykırı olup, hukuka ve hakkaniyete uygun değildir. Mahkeme kararı delillerin değerlendirilmesinde hata yapmış, tarafımızın sunduğu belgeleri göz ardı etmiştir. Bu nedenle kararın bozulması ve dosyanın yeniden görülmek üzere mahkemeye iadesini talep ederim. Temyiz dilekçemin kabulünü ve incelenmesini saygılarımla arz ederim.",
+            
+            // Metin 9 - İtiraz Dilekçesi
+            "İcra Müdürlüğüne, aleyhime başlatılan takibe itiraz ediyorum. Alacaklının iddiası gerçek dışıdır ve aramızda herhangi bir borç ilişkisi bulunmamaktadır. Takip dayanaksız olup, takip konusu alacak tahsil edilmiştir. Bu nedenle takibin durdurulması ve itirazımın kabulü için gerekli işlemlerin yapılmasını talep ederim. Saygılarımla.",
+            
+            // Metin 10 - Haciz Tutanağı
+            "Bugün saat on dört otuzda borçlunun ikametgahına gidilmiştir. Kapıyı borçlu açmış ve içeri alınmıştır. Evin içinde bulunan eşyalar tespit edilmiş ve değerleri takdir edilmiştir. Oturma grubuna beş bin lira, televizyona üç bin lira, mutfak eşyalarına iki bin lira değer biçilmiştir. Toplam on bin lira değerinde eşya haczedilmiştir. Borçlu haciz işlemine itiraz etmemiştir. Tutanak tanzim ve imza edilmiştir.",
+            
+            // Metin 11 - Vekalet Belgesi
+            "Ben, Mehmet Demir, TC kimlik numarası on iki üç dört beş altı yedi sekiz dokuz on bir, Avukat Ayşe Kaya'yı tüm dava ve icra takiplerinde beni temsil etmek üzere vekil tayin ediyorum. Vekilim dava açma, davadan feragat etme, sulh olma, temyiz ve istinaf başvurusunda bulunma yetkisine sahiptir. Bu vekaletname her türlü resmi makam nezdinde geçerlidir.",
+            
+            // Metin 12 - İfade Tutanağı
+            "Kimliğim: Adım Ali, soyadım Yıldız, on dokuz seksen beş Ankara doğumluyum. Olay günü saat on beş civarında iş yerinden çıktım. Eve giderken caddede bir arbede gördüm. Olaya karışmadım ve eve doğru yola devam ettim. Başka bir bilgim yoktur. İfademi okudum, doğrudur, kendi el yazım ile imzalıyorum.",
+            
+            // Metin 13 - Keşif Tutanağı
+            "Mahkememizce yapılan keşif sonucunda, taşınmazın sınırları tespit edilmiş, komşu parsellere olan mesafeler ölçülmüştür. Taşınmaz üzerinde inşa edilmiş yapının toplam alanı iki yüz elli metrekare olarak belirlenmiştir. Binanın kuzey cephesinde hasar tespit edilmiş, onarım gerektiren bölümler fotoğraflanmıştır. Keşif tutanağı mahallinde tanzim ve taraflara imza ettirilmiştir.",
+            
+            // Metin 14 - Bilirkişi Raporu
+            "Mahkeme tarafından tayin edilen bilirkişi sıfatıyla inceleme yaptım. Dosya kapsamındaki belgeler ve mahallinde yapılan keşif neticesinde, taşınmazın rayiç değeri beş yüz bin Türk Lirası olarak tespit edilmiştir. Yapılan hasarın onarım masrafı otuz bin Türk Lirası olarak hesaplanmıştır. Bilgilerinize saygılarımla arz ederim.",
+            
+            // Metin 15 - Tebligat Mazbatası
+            "Eki tebligat tebliğ memuru tarafından muhatap Can Öztürk'e tebliğ edilmek üzere adresine gidilmiştir. Muhatabın evde olmadığı tespit edilmiş, komşusu Fatma Şahin'e tebligat yapılmıştır. Tebligat kanuni usullere uygun olarak gerçekleştirilmiştir. Tarih yirmi dört Kasım iki bin yirmi beş, saat on altı otuz. Tebliğ memuru imzası.",
+            
+            // Metin 16 - Ödeme Emri
+            "İcra Müdürlüğünden, borçlu Zeynep Arslan'a ödeme emri tebliği yapılmaktadır. Alacaklı Hasan Çelik'in on beş bin Türk Lirası alacağı için icra takibi başlatılmıştır. Borç asıl alacak, işlemiş faiz ve takip masraflarından oluşmaktadır. Bu emrin tebliğinden itibaren yedi gün içerisinde borcunuzu ödemediğiniz takdirde haciz işlemleri başlatılacaktır.",
+            
+            // Metin 17 - İcra İnkar Tazminatı
+            "İcra Müdürlüğüne, borçlu takibe itiraz etmiş ancak itirazı haksız çıkmıştır. Bu nedenle İcra ve İflas Kanunu uyarınca icra inkar tazminatı talep ediyorum. Borçlunun haksız itirazı nedeniyle alacağımın tahsili gecikmiş ve maddi kayba uğramış bulunuyorum. İnkar tazminatının hesaplanması ve borçludan tahsil edilmesini talep ederim.",
+            
+            // Metin 18 - Şikayet Dilekçesi
+            "Yüksek Mahkemeye, görevli personelin tutum ve davranışları nedeniyle şikayette bulunuyorum. Dosya işlemlerim sırasında gerekli bilgi verilmemiş ve gereksiz yere işlemlerim geciktirilmiştir. Bu durum mağduriyetime sebep olmuştur. Konunun incelenerek gereğinin yapılmasını saygılarımla arz ederim.",
+            
+            // Metin 19 - Dava Dilekçesi
+            "Sayın Mahkemeye, davalı ile aramızdaki alacak verecek ilişkisinden kaynaklanan uyuşmazlığın çözümü için dava açıyorum. Davalıya ödünç olarak verdiğim yirmi bin Türk Lirasını geri ödemediğinden, alacağımın yasal faiziyle birlikte tahsilini talep ediyorum. Ekli belgeler delillerimdir. Davanın kabulünü saygılarımla arz ederim.",
+            
+            // Metin 20 - Cevap Dilekçesi
+            "Sayın Mahkemeye, aleyhimize açılan davaya karşı cevap dilekçemizi sunuyoruz. Davacının iddiaları gerçeği yansıtmamakta olup, talepleri haksızdır. Borç ödenmemiş değildir, üç ay önce davacıya nakit olarak ödenmiştir. Ancak makbuz alınmamıştır. Davanın reddini ve yargılama giderlerinin davacı üzerinde bırakılmasını talep ederiz.",
+            
+            // Metin 21 - İstinaf Dilekçesi
+            "Bölge Adliye Mahkemesine, aleyhimize verilen ilk derece mahkemesi kararına itiraz ediyoruz. Mahkeme kararı hukuka aykırı olup, deliller tam olarak değerlendirilmemiştir. Tanık beyanları dikkate alınmamış, bilirkişi raporu eksik incelenmiştir. Bu nedenle kararın kaldırılmasını ve yeniden yargılama yapılmasını talep ederiz.",
+            
+            // Metin 22 - Feragat Dilekçesi
+            "Mahkemeye, açmış olduğum davadan feragat ettiğimi bildiriyorum. Davalı ile aramızdaki uyuşmazlık dostane yollarla çözümlenmiş ve anlaşmaya varılmıştır. Bu nedenle dava konusundan feragat ettiğimi, davanın düşürülmesini ve dosyanın kapatılmasını talep ederim. Saygılarımla.",
+            
+            // Metin 23 - Karar Düzeltme
+            "Sayın Mahkemeye, verilen kararda maddi hata bulunduğunu tespit ettik. Kararda belirtilen tutar yirmi bin lira olarak yazılmış, ancak doğrusu otuz bin lira olmalıdır. Dosya içeriği incelendiğinde bu hatanın açıkça görüleceği kanaatindeyiz. Kararın düzeltilmesini saygılarımla talep ederim.",
+            
+            // Metin 24 - Tedbir Talebi
+            "Mahkemeye, davalının mal varlığının korunması için ihtiyati tedbir konulmasını talep ediyorum. Davalının malvarlığını kaçırma ihtimali bulunmakta olup, alacağımın tahsili tehlikeye girmektedir. Bu nedenle acil olarak davalının banka hesaplarına ve taşınmazlarına ihtiyati tedbir konulmasını arz ederim.",
+            
+            // Metin 25 - İnfaz Talebi
+            "İcra Müdürlüğüne, mahkeme kararının infazını talep ediyorum. Dosya eki mahkeme kararı kesinleşmiş olup, davalının on sekiz bin Türk Lirası ödemesi gerekmektedir. Kararın bir an önce infaz edilmesi ve alacağımın tahsil edilmesi için gerekli işlemlerin başlatılmasını saygılarımla arz ederim.",
+            
+            // KLAVYE EGZERSİZLERİ BAŞLANGIÇ
+            
+            // Metin 26 - Sol El Ana Tuşlar (ASDF)
+            "aaa sss ddd fff aaa sss ddd fff asdf asdf asdf asdf fdsa fdsa fdsa fdsa asdf asdf asdf asdf fas fas fas fas sad sad sad sad fad fad fad fad daf daf daf daf saf saf saf saf",
+            
+            // Metin 27 - Sağ El Ana Tuşlar (JKL)
+            "jjj kkk lll jjj kkk lll jkl jkl jkl jkl lkj lkj lkj lkj jklj jklj jklj jklj kjl kjl kjl kjl ljk ljk ljk ljk jlk jlk jlk jlk kljk kljk kljk kljk jjkk jjkk llkk llkk",
+            
+            // Metin 28 - Her İki El Ana Tuşlar Kombinasyon
+            "asdf jkl asdf jkl asdf jkl fjdk fjdk fjdk sala sala sala kafa kafa dala dala jak jak jak laf laf laf kas kas kas dal dal dal fal fal fal salak salak salak",
+            
+            // Metin 29 - Üst Sıra Tuşlar (QWERT YUIOP)
+            "qqq www eee rrr ttt yyy uuu iii ooo ppp qwert qwert qwert yuiop yuiop yuiop tüp tüp tüp pür pür pür öre öre öre tortu tortu tortu yurt yurt yurt yırt yırt yırt",
+            
+            // Metin 30 - Alt Sıra Tuşlar (ZXCVB NM)
+            "zzz xxx ccc vvv bbb nnn mmm zcvb zcvb zcvb zaman zaman zaman can can can van van van ban ban ban mani mani mani nazi nazi nazi vazn vazn vazn cambaz cambaz cambaz",
+            
+            // Metin 31 - Büyük Harfler ve Shift Tuşu
+            "Aaa Sss Ddd Fff Jjj Kkk Lll AAA SSS DDD FFF JJJ KKK LLL Asdf Jklş Asdf Jklş ASDF JKLŞ ASDF JKLŞ Ankara Ankara İstanbul İstanbul Türkiye Türkiye ADALET ADALET",
+            
+            // Metin 32 - Rakamlar Üst Sıra (1-5)
+            "111 222 333 444 555 11 22 33 44 55 12345 12345 12345 54321 54321 54321 1a 2s 3d 4f 5g 12 23 34 45 51 123 234 345 451 512 1234 2345 3451 4512 5123",
+            
+            // Metin 33 - Rakamlar Üst Sıra (6-0)
+            "666 777 888 999 000 66 77 88 99 00 67890 67890 67890 09876 09876 09876 6y 7u 8ı 9o 0p 67 78 89 90 06 678 789 890 906 067 6789 7890 8906 9067 0678",
+            
+            // Metin 34 - Tüm Rakamlar Kombinasyon
+            "1234567890 0987654321 13579 24680 1357924680 1122334455 5544332211 101010 202020 12 23 34 45 56 67 78 89 90 01 1a2b3c4d5e6f7g8h9ı0j 2024 2025 1453 1923",
+            
+            // Metin 35 - Noktalama İşaretleri
+            "... ,,,  ;;; ::: --- ___ +++ === !!! ??? a. b. c. d. e. f. g. h. i. j. k. l. m. Merhaba, nasılsın? Ben iyiyim, teşekkürler! Saat 14:30'da; yarın 09:00'da.",
+            
+            // Metin 36 - Parantez ve Özel Karakterler
+            "() [] {} <> // ** %% ## @@ && || aaa (bbb) ccc [ddd] eee {fff} ggg <hhh> test@mail.com 100% #1 & || // ** (2024) [test] {kayıt}",
+            
+            // Metin 37 - Türkçe Karakterler (ÇĞİÖŞÜ)
+            "ççç ğğğ ııı ööö şşş üüü ÇÇÇ ĞĞĞ İİİ ÖÖÖ ŞŞŞ ÜÜÜ çiğ şöğüt öğün üğrün çağ çağla çığır göğüs güğüm düğün düğme çığlık çiğdem şişman",
+            
+            // Metin 38 - Türkçe Kelimeler Tekrar
+            "çok çok çok gül gül gül şık şık şık öğle öğle öğle ışık ışık ışık üzüm üzüm üzüm çiçek çiçek çiçek göğüs göğüs göğüs düğün düğün düğün şişman şişman şişman",
+            
+            // Metin 39 - Tüm Parmaklar İçin Karışık
+            "qaz wsx edc rfv tgb yhn ujm ikl opş qwe asd zxc fgh jkl bnm rty uıo vbn pol poi lkj mnb aaa zzz qqq ppp 123 789 456 qaz123 wsx456 edc789 rfv147 tgb258",
+            
+            // Metin 40 - Hızlı Parmak Geçişleri
+            "af aj ak al as ks ls js fs ds df gf hf jf kf lf ağ el il öl af uf ef if of dk fk gk hk jk lk pa sa da fa ga ha ja ka la za xa ca va ba na ma az ez iz öz",
+            
+            // Metin 41 - Çift Harf Kombinasyonları
+            "aa bb cc dd ee ff gg hh ii jj kk ll mm nn oo pp rr ss tt uu vv yy zz all arr ass att add aff agg akk all amm ann app arr att azz baa boo bee bii buu",
+            
+            // Metin 42 - Zor Kelime Kombinasyonları
+            "xyz çğş pöl mnb qwz zaq plm kij uhb ygv tfc rdx sec waz qvb ğüş öçş ışğ üşö çğı ğıü pşğ lşç kğö jşi hğü gçö fıü dşğ sğç aöş",
+            
+            // Metin 43 - Sık Kullanılan Kelimeler Tekrar
+            "ve ve ve ile ile ile için için için bu bu bu bir bir bir da da da de de de ki ki ki ne ne ne en en en çok çok çok var var var yok yok yok kadar kadar kadar gibi gibi gibi",
+            
+            // Metin 44 - Uzun Kelimeler Tekrar
+            "Cumhuriyetimizin Cumhuriyetimizin Cumhuriyetimizin merhametliler merhametliler merhametliler Çekoslovakyalılaştıramadıklarımızdan Çekoslovakyalılaştıramadıklarımızdan değerlendirmeler değerlendirmeler değerlendirmeler",
+            
+            // Metin 45 - Tüm Tuşlar Final Testi
+            "abcçdefgğhıijklmnoöprsştuüvyz ABCÇDEFGĞHIIJKLMNOÖPRSŞTUÜVYZ 0123456789 .,;:!?'\"()[]{}+-*/=<>@#$%&_ Türkiye Cumhuriyeti Anayasası'nın 1234567890 maddeleri çerçevesinde; adalet, eşitlik, özgürlük & demokrasi kavramları (2024-2025) döneminde %100 uygulanmalı!"
+        ];
+
+        // Announcements
+        const announcements = [
+            "Test süresi ayarlanabilir (5-60 dakika). Süre bitiminde test otomatik olarak sonlandırılacaktır.",
+            "10 parmak yazma tekniğini kullanmanız önerilir.",
+            "Test sırasında kopyala, yapıştır ve sürükle-bırak işlemleri güvenlik nedeniyle engellenmiştir."
+        ];
+
+        function showAnnouncements() {
+            const container = document.getElementById('announcementsContainer');
+            announcements.forEach(announcement => {
+                const div = document.createElement('div');
+                div.className = 'announcement';
+                div.innerHTML = `<i class="fas fa-bullhorn me-2"></i>${announcement}`;
+                container.appendChild(div);
+            });
+        }
+
+        function connectServer() {
+            const status = document.getElementById('serverStatus');
+            status.textContent = 'Bağlanıyor...';
+            status.className = 'text-warning';
+            
+            setTimeout(() => {
+                status.textContent = 'Bağlı';
+                status.className = 'text-success';
+            }, 1000);
+        }
+
+        function changeKeyboard() {
+            currentKeyboard = document.getElementById('keyboardType').value;
+            document.getElementById('keyboardIndicator').textContent = currentKeyboard + ' Klavye Aktif';
+        }
+
+        function toggleCustomTime() {
+            const timeLimit = document.getElementById('timeLimit').value;
+            const customTimeDiv = document.getElementById('customTimeDiv');
+            
+            if (timeLimit === 'custom') {
+                customTimeDiv.style.display = 'block';
+            } else {
+                customTimeDiv.style.display = 'none';
+            }
+        }
+
+        // Validate custom time inputs on change
+        document.addEventListener('DOMContentLoaded', function() {
+            const customMinutes = document.getElementById('customMinutes');
+            const customSeconds = document.getElementById('customSeconds');
+            
+            customMinutes.addEventListener('input', function() {
+                if (this.value > 180) this.value = 180;
+                if (this.value < 0) this.value = 0;
+            });
+            
+            customSeconds.addEventListener('input', function() {
+                if (this.value > 59) this.value = 59;
+                if (this.value < 0) this.value = 0;
+            });
+        });
+
+        function updateTextSelection() {
+            const textType = document.getElementById('textType').value;
+            const legalTextDiv = document.getElementById('legalTextDiv');
+            const practiceTextDiv = document.getElementById('practiceTextDiv');
+            
+            if (textType === 'legal') {
+                legalTextDiv.style.display = 'block';
+                practiceTextDiv.style.display = 'none';
+            } else {
+                legalTextDiv.style.display = 'none';
+                practiceTextDiv.style.display = 'block';
+            }
+            
+            loadSelectedText();
+        }
+
+        function loadSelectedText() {
+            const textType = document.getElementById('textType').value;
+            
+            if (textType === 'legal') {
+                const selectedIndex = document.getElementById('textSelection').value;
+                document.getElementById('sourceText').textContent = textSamples[selectedIndex];
+            } else {
+                const practiceIndex = document.getElementById('practiceSelection').value;
+                document.getElementById('sourceText').textContent = textSamples[practiceIndex];
+            }
+        }
+
+        function importText() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('sourceText').textContent = e.target.result;
+                };
+                reader.readAsText(file, 'UTF-8');
+            }
+        }
+
+        function startTest() {
+            const name = document.getElementById('candidateName').value;
+            const tcNo = document.getElementById('candidateID').value;
+            
+            if (!name || !tcNo) {
+                alert('Lütfen ad soyad ve Öğrenci numaranızı girin!');
+                return;
+            }
+
+            if (tcNo.length !== 11) {
+                alert('Öğrenci numarası 11 haneli olmalıdır!');
+                return;
+            }
+
+            // Validate custom time if selected
+            const timeLimitValue = document.getElementById('timeLimit').value;
+            if (timeLimitValue === 'custom') {
+                const customMinutes = parseInt(document.getElementById('customMinutes').value) || 0;
+                const customSeconds = parseInt(document.getElementById('customSeconds').value) || 0;
+                const totalSeconds = (customMinutes * 60) + customSeconds;
+                
+                if (totalSeconds === 0) {
+                    alert('Lütfen geçerli bir süre girin! (En az 1 saniye)');
+                    return;
+                }
+                
+                if (customMinutes > 180) {
+                    alert('Maksimum süre 180 dakikadır!');
+                    return;
+                }
+                
+                if (customSeconds > 59) {
+                    alert('Saniye değeri 0-59 arasında olmalıdır!');
+                    return;
+                }
+            }
+
+            testStarted = true;
+            startTime = new Date();
+            document.getElementById('testArea').disabled = false;
+            document.getElementById('testArea').focus();
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('finishBtn').disabled = false;
+            
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(diff / 60);
+            const seconds = diff % 60;
+            
+            document.getElementById('timer').textContent = 
+                `${String(minutes).padStart(2, '0')} Dk ${String(seconds).padStart(2, '0')} Sn`;
+            
+            // Auto finish based on selected time limit
+            let timeLimitSeconds;
+            const timeLimitValue = document.getElementById('timeLimit').value;
+            
+            if (timeLimitValue === 'custom') {
+                const customMinutes = parseInt(document.getElementById('customMinutes').value) || 0;
+                const customSeconds = parseInt(document.getElementById('customSeconds').value) || 0;
+                timeLimitSeconds = (customMinutes * 60) + customSeconds;
+            } else {
+                timeLimitSeconds = parseInt(timeLimitValue) * 60;
+            }
+            
+            if (diff >= timeLimitSeconds) {
+                finishTest();
+            }
+        }
+
+        // Prevent copy/paste operations on test area
+        document.addEventListener('DOMContentLoaded', function() {
+            const testArea = document.getElementById('testArea');
+            
+            // Prevent keyboard shortcuts (Ctrl+C, Ctrl+V, Ctrl+X)
+            testArea.addEventListener('keydown', function(e) {
+                if (testStarted && (e.ctrlKey || e.metaKey)) {
+                    if (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a') {
+                        e.preventDefault();
+                        showCopyPasteWarning();
+                        return false;
+                    }
+                }
+            });
+            
+            // Prevent context menu (right-click)
+            testArea.addEventListener('contextmenu', function(e) {
+                if (testStarted) {
+                    e.preventDefault();
+                    showCopyPasteWarning();
+                    return false;
+                }
+            });
+            
+            // Prevent copy event
+            testArea.addEventListener('copy', function(e) {
+                if (testStarted) {
+                    e.preventDefault();
+                    showCopyPasteWarning();
+                    return false;
+                }
+            });
+            
+            // Prevent cut event
+            testArea.addEventListener('cut', function(e) {
+                if (testStarted) {
+                    e.preventDefault();
+                    showCopyPasteWarning();
+                    return false;
+                }
+            });
+            
+            // Prevent paste event
+            testArea.addEventListener('paste', function(e) {
+                if (testStarted) {
+                    e.preventDefault();
+                    showCopyPasteWarning();
+                    return false;
+                }
+            });
+            
+            // Prevent drag and drop
+            testArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                showCopyPasteWarning();
+                return false;
+            });
+            
+            testArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Prevent touch-based copy/paste on mobile devices
+            testArea.addEventListener('touchstart', function(e) {
+                if (testStarted && e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Prevent long press context menu on mobile
+            let pressTimer;
+            testArea.addEventListener('touchstart', function(e) {
+                if (testStarted) {
+                    pressTimer = setTimeout(function() {
+                        e.preventDefault();
+                        showCopyPasteWarning();
+                    }, 500);
+                }
+            });
+            
+            testArea.addEventListener('touchend', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            testArea.addEventListener('touchmove', function() {
+                clearTimeout(pressTimer);
+            });
+        });
+
+        function showCopyPasteWarning() {
+            // Create temporary alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger';
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.style.minWidth = '300px';
+            alertDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i><strong>Uyarı:</strong> Kopyala/Yapıştır işlemleri yasaktır!';
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(function() {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        document.getElementById('testArea').addEventListener('input', function(e) {
+            if (!testStarted) return;
+            
+            const typedText = e.target.value;
+            const sourceText = document.getElementById('sourceText').textContent;
+            
+            totalChars = typedText.length;
+            document.getElementById('charCount').textContent = totalChars;
+            
+            // Calculate errors (compare with full source text)
+            errors = 0;
+            for (let i = 0; i < typedText.length; i++) {
+                if (typedText[i] !== sourceText[i]) {
+                    errors++;
+                }
+            }
+            document.getElementById('errorCount').textContent = errors;
+            
+            // Calculate accuracy based on full source text
+            const sourceLength = sourceText.length;
+            const accuracy = sourceLength > 0 ? ((typedText.length - errors) / sourceLength * 100).toFixed(1) : 0;
+            document.getElementById('accuracy').textContent = accuracy;
+            
+            // Calculate WPM
+            const now = new Date();
+            const minutes = (now - startTime) / 60000;
+            const words = typedText.length / 5;
+            const wpm = minutes > 0 ? Math.round(words / minutes) : 0;
+            document.getElementById('wpm').textContent = wpm;
+        });
+
+        function finishTest() {
+            if (!testStarted) return;
+            
+            testStarted = false;
+            clearInterval(timerInterval);
+            document.getElementById('testArea').disabled = true;
+            document.getElementById('finishBtn').disabled = true;
+            document.getElementById('savePDFBtn').disabled = false;
+            document.getElementById('saveTXTBtn').disabled = false;
+            
+            showResults();
+        }
+
+        function showResults() {
+            const now = new Date();
+            const duration = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            
+            const name = document.getElementById('candidateName').value;
+            const tcNo = document.getElementById('candidateID').value;
+            const examType = document.getElementById('examType').options[document.getElementById('examType').selectedIndex].text;
+            const typedText = document.getElementById('testArea').value;
+            const sourceText = document.getElementById('sourceText').textContent;
+            
+            // Split texts into words (keeping track of spaces)
+            const sourceWords = sourceText.split(/(\s+)/); // Split but keep delimiters
+            const typedWords = typedText.split(/(\s+)/);
+            
+            // Calculate detailed comparison - word by word
+            let correctChars = 0;
+            let wrongChars = 0;
+            let comparisonHTML = '<div class="comparison-container">';
+            
+            for (let i = 0; i < sourceWords.length; i++) {
+                const sourceWord = sourceWords[i];
+                const typedWord = typedWords[i] || '';
+                
+                if (sourceWord.match(/^\s+$/)) {
+                    // This is a space/whitespace
+                    if (typedWord === sourceWord) {
+                        // Correct space(s)
+                        const spaceDisplay = '␣'.repeat(sourceWord.length);
+                        comparisonHTML += `<span class="char-correct">${spaceDisplay}</span>`;
+                        correctChars += sourceWord.length;
+                    } else if (typedWord.match(/^\s+$/)) {
+                        // Wrong number of spaces
+                        const spaceDisplay = '␣'.repeat(sourceWord.length);
+                        comparisonHTML += `<span class="char-wrong" title="Yanlış sayıda boşluk">${spaceDisplay}</span>`;
+                        wrongChars += sourceWord.length;
+                    } else if (typedWord === '') {
+                        // Missing spaces
+                        const spaceDisplay = '␣'.repeat(sourceWord.length);
+                        comparisonHTML += `<span class="char-missing">${spaceDisplay}</span>`;
+                    } else {
+                        // Typed something instead of space
+                        const spaceDisplay = '␣'.repeat(sourceWord.length);
+                        comparisonHTML += `<span class="char-wrong" title="Boşluk yerine harf yazıldı">${spaceDisplay}</span>`;
+                        wrongChars += sourceWord.length;
+                    }
+                } else {
+                    // This is a word (non-whitespace)
+                    if (i >= typedWords.length) {
+                        // Missing entire word
+                        for (let c of sourceWord) {
+                            comparisonHTML += `<span class="char-missing">${c}</span>`;
+                        }
+                    } else {
+                        // Compare character by character within the word
+                        const maxLen = Math.max(sourceWord.length, typedWord.length);
+                        for (let j = 0; j < sourceWord.length; j++) {
+                            const sourceChar = sourceWord[j];
+                            const typedChar = typedWord[j] || '';
+                            
+                            if (typedChar === sourceChar) {
+                                comparisonHTML += `<span class="char-correct">${sourceChar}</span>`;
+                                correctChars++;
+                            } else if (typedChar === '') {
+                                comparisonHTML += `<span class="char-missing">${sourceChar}</span>`;
+                            } else {
+                                comparisonHTML += `<span class="char-wrong" title="Yazılan: ${typedChar}">${sourceChar}</span>`;
+                                wrongChars++;
+                            }
+                        }
+                    }
+                }
+            }
+            comparisonHTML += '</div>';
+            
+            const sourceLength = sourceText.length;
+            const typedLength = typedText.length;
+            const missingChars = sourceLength - correctChars - wrongChars;
+            
+            // Recalculate final statistics
+            errors = wrongChars;
+            const accuracy = sourceLength > 0 ? ((correctChars / sourceLength) * 100).toFixed(1) : 0;
+            const wpm = minutes > 0 ? Math.round((correctChars / 5) / minutes) : 0;
+            const completionRate = sourceLength > 0 ? ((typedLength / sourceLength) * 100).toFixed(1) : 0;
+            
+            // Update display values
+            document.getElementById('wpm').textContent = wpm;
+            document.getElementById('accuracy').textContent = accuracy;
+            document.getElementById('errorCount').textContent = errors;
+            
+            const resultsHTML = `
+                <div class="result-card">
+                    <h3 class="text-center mb-4"><i class="fas fa-trophy me-2"></i>Sınav Sonuçları</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Aday:</strong> ${name}</p>
+                            <p><strong>TC No:</strong> ${tcNo}</p>
+                            <p><strong>Sınav Türü:</strong> ${examType}</p>
+                            <p><strong>Klavye:</strong> ${currentKeyboard} Klavye</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Tarih:</strong> ${now.toLocaleDateString('tr-TR')}</p>
+                            <p><strong>Saat:</strong> ${now.toLocaleTimeString('tr-TR')}</p>
+                            <p><strong>Süre:</strong> ${minutes} Dk ${String(seconds).padStart(2, '0')} Sn</p>
+                            <p><strong>Toplam Karakter:</strong> ${typedLength} / ${sourceLength}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center mb-3">
+                        <div class="col-md-3">
+                            <h4 class="text-danger">${wpm}</h4>
+                            <p>Kelime/Dakika</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 class="text-danger">${accuracy}%</h4>
+                            <p>Doğruluk Oranı</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 class="text-danger">${errors}</h4>
+                            <p>Hata Sayısı</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 class="text-danger">${completionRate}%</h4>
+                            <p>Tamamlanma</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center mb-3">
+                        <div class="col-md-4">
+                            <div class="stats-box" style="background: #d4edda; border-color: #28a745;">
+                                <div class="stats-number" style="color: #28a745;">${correctChars}</div>
+                                <div class="stats-label">Doğru Karakter</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-box" style="background: #f8d7da; border-color: #dc3545;">
+                                <div class="stats-number" style="color: #dc3545;">${wrongChars}</div>
+                                <div class="stats-label">Yanlış Karakter</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-box" style="background: #fff3cd; border-color: #ffc107;">
+                                <div class="stats-number" style="color: #856404;">${missingChars}</div>
+                                <div class="stats-label">Eksik Karakter</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h5 class="mb-3"><i class="fas fa-search me-2"></i>Detaylı Karşılaştırma</h5>
+                    <div class="comparison-legend">
+                        <span><span style="color: #28a745; font-weight: bold;">●</span> Doğru</span>
+                        <span><span style="color: #dc3545; font-weight: bold;">●</span> Yanlış</span>
+                        <span><span style="color: #856404; font-weight: bold;">●</span> Eksik</span>
+                        <span><span style="color: #6c757d; font-weight: bold;">␣</span> = Boşluk</span>
+                    </div>
+                    ${comparisonHTML}
+                    <div class="alert alert-info mt-3" style="font-size: 13px;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        <strong>Not:</strong> Kelime kelime karşılaştırma yapılır. Birden fazla boşluk kullanıldığında, sadece boşluklar hatalı gösterilir ve sonraki kelimeler etkilenmez.
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resultsContainer').innerHTML = resultsHTML;
+        }
+
+        function savePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const now = new Date();
+            const name = document.getElementById('candidateName').value;
+            const tcNo = document.getElementById('candidateID').value;
+            const examType = document.getElementById('examType').options[document.getElementById('examType').selectedIndex].text;
+            const typedText = document.getElementById('testArea').value;
+            const sourceText = document.getElementById('sourceText').textContent;
+            const wpm = document.getElementById('wpm').textContent;
+            const accuracy = document.getElementById('accuracy').textContent;
+            
+            // Calculate detailed statistics
+            const sourceWords = sourceText.split(/(\s+)/);
+            const typedWords = typedText.split(/(\s+)/);
+            
+            let correctChars = 0;
+            let wrongChars = 0;
+            
+            // Word by word comparison for PDF
+            for (let i = 0; i < sourceWords.length; i++) {
+                const sourceWord = sourceWords[i];
+                const typedWord = typedWords[i] || '';
+                
+                if (sourceWord.match(/^\s+$/)) {
+                    if (typedWord === sourceWord) {
+                        correctChars += sourceWord.length;
+                    } else {
+                        wrongChars += sourceWord.length;
+                    }
+                } else {
+                    for (let j = 0; j < sourceWord.length; j++) {
+                        if (typedWord[j] === sourceWord[j]) {
+                            correctChars++;
+                        } else {
+                            wrongChars++;
+                        }
+                    }
+                }
+            }
+            
+            const sourceLength = sourceText.length;
+            const typedLength = typedText.length;
+            const missingChars = sourceLength - correctChars - wrongChars;
+            const completionRate = ((typedLength / sourceLength) * 100).toFixed(1);
+            
+            // Helper function to convert Turkish characters for PDF
+            function turkishToSafe(text) {
+                return text
+                    .replace(/ı/g, 'i')
+                    .replace(/İ/g, 'I')
+                    .replace(/ş/g, 's')
+                    .replace(/Ş/g, 'S')
+                    .replace(/ğ/g, 'g')
+                    .replace(/Ğ/g, 'G')
+                    .replace(/ü/g, 'u')
+                    .replace(/Ü/g, 'U')
+                    .replace(/ö/g, 'o')
+                    .replace(/Ö/g, 'O')
+                    .replace(/ç/g, 'c')
+                    .replace(/Ç/g, 'C');
+            }
+            
+            // Modern PDF Design
+            // Page 1 - Header and Summary
+            
+            // Header with gradient effect (simulated with rectangles)
+            doc.setFillColor(220, 53, 69);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setFillColor(200, 33, 49);
+            doc.rect(0, 30, 210, 10, 'F');
+            
+            // Title
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('KATIP TEST PROGRAMI', 105, 15, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Sinav Sonuc Raporu', 105, 25, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.text('Tarih: ' + now.toLocaleDateString('tr-TR') + ' - Saat: ' + now.toLocaleTimeString('tr-TR'), 105, 35, { align: 'center' });
+            
+            // Candidate Information Box
+            doc.setFillColor(245, 245, 245);
+            doc.roundedRect(15, 50, 180, 38, 3, 3, 'F');
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('ADAY BILGILERI', 20, 58);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text('Ad Soyad: ' + turkishToSafe(name), 20, 66);
+            doc.text('Öğrenci Numarası: ' + tcNo, 20, 72);
+            doc.text('Sinav Turu: ' + turkishToSafe(examType), 20, 78);
+            doc.text('Klavye Turu: ' + currentKeyboard + ' Klavye', 20, 84);
+            
+            const duration = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            doc.text('Test Suresi: ' + minutes + ' Dk ' + seconds + ' Sn', 120, 66);
+            
+            // Performance Summary with colored boxes
+            let yPos = 98;
+            
+            // WPM Box
+            doc.setFillColor(40, 167, 69);
+            doc.roundedRect(15, yPos, 42, 30, 3, 3, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text(wpm, 36, yPos + 15, { align: 'center' });
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Kelime/Dakika', 36, yPos + 23, { align: 'center' });
+            
+            // Accuracy Box
+            doc.setFillColor(0, 123, 255);
+            doc.roundedRect(62, yPos, 42, 30, 3, 3, 'F');
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text(accuracy + '%', 83, yPos + 15, { align: 'center' });
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Dogruluk', 83, yPos + 23, { align: 'center' });
+            
+            // Completion Box
+            doc.setFillColor(255, 193, 7);
+            doc.roundedRect(109, yPos, 42, 30, 3, 3, 'F');
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text(completionRate + '%', 130, yPos + 15, { align: 'center' });
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Tamamlanma', 130, yPos + 23, { align: 'center' });
+            
+            // Errors Box
+            doc.setFillColor(220, 53, 69);
+            doc.roundedRect(156, yPos, 42, 30, 3, 3, 'F');
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text(String(wrongChars), 177, yPos + 15, { align: 'center' });
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Hata Sayisi', 177, yPos + 23, { align: 'center' });
+            
+            // Detailed Statistics
+            yPos = 138;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('DETAYLI ISTATISTIKLER', 20, yPos);
+            
+            doc.setFillColor(245, 245, 245);
+            doc.roundedRect(15, yPos + 5, 180, 50, 3, 3, 'F');
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            yPos += 13;
+            
+            doc.text('Toplam Kaynak Karakter: ' + sourceLength, 20, yPos);
+            doc.text('Yazilan Karakter: ' + typedLength, 110, yPos);
+            
+            yPos += 8;
+            doc.setTextColor(40, 167, 69);
+            doc.text('Dogru Karakter: ' + correctChars, 20, yPos);
+            doc.setTextColor(220, 53, 69);
+            doc.text('Yanlis Karakter: ' + wrongChars, 110, yPos);
+            
+            yPos += 8;
+            doc.setTextColor(255, 193, 7);
+            doc.text('Eksik Karakter: ' + missingChars, 20, yPos);
+            doc.setTextColor(0, 123, 255);
+            doc.text('Tamamlanma Orani: ' + completionRate + '%', 110, yPos);
+            
+            // Progress Bar
+            yPos += 12;
+            doc.setTextColor(0, 0, 0);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Ilerleme Cubugu:', 20, yPos);
+            
+            yPos += 5;
+            const barWidth = 170;
+            const correctWidth = (correctChars / sourceLength) * barWidth;
+            const wrongWidth = (wrongChars / sourceLength) * barWidth;
+            
+            // Background
+            doc.setFillColor(230, 230, 230);
+            doc.roundedRect(20, yPos, barWidth, 8, 2, 2, 'F');
+            
+            // Correct (Green)
+            if (correctWidth > 0) {
+                doc.setFillColor(40, 167, 69);
+                doc.roundedRect(20, yPos, correctWidth, 8, 2, 2, 'F');
+            }
+            
+            // Wrong (Red)
+            if (wrongWidth > 0) {
+                doc.setFillColor(220, 53, 69);
+                doc.roundedRect(20 + correctWidth, yPos, wrongWidth, 8, 2, 2, 'F');
+            }
+            
+            // Legend
+            yPos += 13;
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            
+            doc.setFillColor(40, 167, 69);
+            doc.rect(20, yPos - 2, 4, 4, 'F');
+            doc.setTextColor(0, 0, 0);
+            doc.text('Dogru', 26, yPos + 1);
+            
+            doc.setFillColor(220, 53, 69);
+            doc.rect(55, yPos - 2, 4, 4, 'F');
+            doc.text('Yanlis', 61, yPos + 1);
+            
+            doc.setFillColor(255, 193, 7);
+            doc.rect(90, yPos - 2, 4, 4, 'F');
+            doc.text('Eksik', 96, yPos + 1);
+            
+            // Footer page 1
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Katip Test Programi - Zabit ve Icra Katipligi Sinavlari', 105, 285, { align: 'center' });
+            doc.text('Sayfa 1/2', 105, 290, { align: 'center' });
+            
+            // Page 2 - Text Comparison
+            doc.addPage();
+            
+            // Header
+            doc.setFillColor(220, 53, 69);
+            doc.rect(0, 0, 210, 25, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('METIN KARSILASTIRMASI', 105, 15, { align: 'center' });
+            
+            // Source Text
+            yPos = 35;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('KAYNAK METIN:', 15, yPos);
+            
+            yPos += 5;
+            doc.setFillColor(245, 245, 245);
+            doc.roundedRect(15, yPos, 180, 55, 3, 3, 'F');
+            
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            
+            // Properly split and wrap source text
+            const sourceTextSafe = turkishToSafe(sourceText.substring(0, 600)); // Limit length
+            const sourceLines = doc.splitTextToSize(sourceTextSafe, 170);
+            
+            yPos += 5;
+            let lineCount = 0;
+            for (let i = 0; i < sourceLines.length && lineCount < 11; i++) {
+                doc.text(sourceLines[i], 20, yPos + (lineCount * 4.5));
+                lineCount++;
+            }
+            if (sourceLines.length > 11) {
+                doc.text('...', 20, yPos + (lineCount * 4.5));
+            }
+            
+            // Typed Text
+            yPos = 100;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('YAZILAN METIN:', 15, yPos);
+            
+            yPos += 5;
+            doc.setFillColor(240, 248, 255);
+            doc.roundedRect(15, yPos, 180, 55, 3, 3, 'F');
+            
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            
+            // Properly split and wrap typed text
+            const typedTextSafe = typedText ? turkishToSafe(typedText.substring(0, 600)) : '(Metin yazilmadi)';
+            const typedLines = doc.splitTextToSize(typedTextSafe, 170);
+            
+            yPos += 5;
+            lineCount = 0;
+            for (let i = 0; i < typedLines.length && lineCount < 11; i++) {
+                doc.text(typedLines[i], 20, yPos + (lineCount * 4.5));
+                lineCount++;
+            }
+            if (typedLines.length > 11) {
+                doc.text('...', 20, yPos + (lineCount * 4.5));
+            }
+            
+            // Comparison Analysis
+            yPos = 165;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('KARSILASTIRMA ANALIZI:', 15, yPos);
+            
+            yPos += 5;
+            doc.setFillColor(255, 248, 240);
+            doc.roundedRect(15, yPos, 180, 95, 3, 3, 'F');
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            
+            // Create character-by-character comparison preview
+            let comparisonPreview = '';
+            const maxChars = 500; // Limit for PDF
+            
+            for (let i = 0; i < Math.min(sourceLength, maxChars); i++) {
+                const sourceChar = sourceText[i];
+                const typedChar = typedText[i] || '';
+                
+                if (i < typedLength) {
+                    if (typedChar === sourceChar) {
+                        comparisonPreview += sourceChar;
+                    } else {
+                        comparisonPreview += '[' + sourceChar + ']';
+                    }
+                } else {
+                    comparisonPreview += '{' + sourceChar + '}';
+                }
+            }
+            
+            if (sourceLength > maxChars) {
+                comparisonPreview += '...';
+            }
+            
+            const comparisonSafe = turkishToSafe(comparisonPreview);
+            const comparisonLines = doc.splitTextToSize(comparisonSafe, 170);
+            
+            yPos += 5;
+            lineCount = 0;
+            for (let i = 0; i < comparisonLines.length && lineCount < 19; i++) {
+                doc.text(comparisonLines[i], 20, yPos + (lineCount * 4.5));
+                lineCount++;
+            }
+            
+            // Legend for comparison
+            yPos = 267;
+            doc.setFontSize(7);
+            doc.text('Aciklama: Normal = Dogru | [X] = Yanlis (X yerine baska harf) | {X} = Eksik (X yazilmamis)', 20, yPos);
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Katip Test Programi - Zabit ve Icra Katipligi Sinavlari', 105, 285, { align: 'center' });
+            doc.text('Sayfa 2/2 - Rapor No: ' + Date.now(), 105, 290, { align: 'center' });
+            
+            // Save
+            doc.save('Katip-Test-Rapor-' + tcNo + '-' + Date.now() + '.pdf');
+        }
+
+        function saveTXT() {
+            const now = new Date();
+            const name = document.getElementById('candidateName').value;
+            const tcNo = document.getElementById('candidateID').value;
+            const examType = document.getElementById('examType').options[document.getElementById('examType').selectedIndex].text;
+            const typedText = document.getElementById('testArea').value;
+            const sourceText = document.getElementById('sourceText').textContent;
+            const wpm = document.getElementById('wpm').textContent;
+            const accuracy = document.getElementById('accuracy').textContent;
+            
+            // Calculate statistics
+            const sourceLength = sourceText.length;
+            const typedLength = typedText.length;
+            const missingChars = sourceLength - typedLength;
+            
+            let correctChars = 0;
+            let wrongChars = 0;
+            for (let i = 0; i < typedLength; i++) {
+                if (typedText[i] === sourceText[i]) {
+                    correctChars++;
+                } else {
+                    wrongChars++;
+                }
+            }
+            
+            const completionRate = ((typedLength / sourceLength) * 100).toFixed(1);
+            
+            const content = `
+KATIP TEST PROGRAMI
+SINAV SONUCLARI
+==================
+
+ADAY BILGILERI
+--------------
+Aday: ${name}
+TC No: ${tcNo}
+Sinav Turu: ${examType}
+Klavye: ${currentKeyboard} Klavye
+Tarih: ${now.toLocaleDateString('tr-TR')}
+Saat: ${now.toLocaleTimeString('tr-TR')}
+
+DETAYLI SONUCLAR
+----------------
+Toplam Kaynak Karakter: ${sourceLength}
+Yazilan Karakter: ${typedLength}
+Dogru Karakter: ${correctChars}
+Yanlis Karakter: ${wrongChars}
+Eksik Karakter: ${missingChars}
+Tamamlanma Orani: ${completionRate}%
+Kelime/Dakika: ${wpm}
+Dogruluk Orani: ${accuracy}%
+Hata Sayisi: ${wrongChars}
+
+==================
+KAYNAK METIN:
+${sourceText}
+
+==================
+YAZILAN METIN:
+${typedText}
+
+==================
+KARSILASTIRMA NOTU:
+- Dogru karakterler: Kaynak metin ile tam eslesen karakterler
+- Yanlis karakterler: Kaynak metin ile uyusmayan karakterler
+- Eksik karakterler: Yazilamayan karakterler
+            `;
+            
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `katip-test-${tcNo}-${Date.now()}.txt`;
+            link.click();
+        }
+
+        function resetTest() {
+            testStarted = false;
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = '00 Dk 00 Sn';
+            document.getElementById('testArea').value = '';
+            document.getElementById('testArea').disabled = true;
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('wpm').textContent = '0';
+            document.getElementById('accuracy').textContent = '100';
+            document.getElementById('errorCount').textContent = '0';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('finishBtn').disabled = true;
+            document.getElementById('savePDFBtn').disabled = true;
+            document.getElementById('saveTXTBtn').disabled = true;
+            document.getElementById('resultsContainer').innerHTML = '';
+            totalChars = 0;
+            errors = 0;
+        }
+
+        // Initialize
+        window.onload = function() {
+            showAnnouncements();
+            connectServer();
+            loadSelectedText(); // Load default text
+        };
+    </script>
+</body>
+</html>
