@@ -841,7 +841,8 @@
         const announcements = [
             "Test süresi ayarlanabilir (5-60 dakika). Süre bitiminde test otomatik olarak sonlandırılacaktır.",
             "10 parmak yazma tekniğini kullanmanız önerilir.",
-            "Test sırasında kopyala, yapıştır ve sürükle-bırak işlemleri güvenlik nedeniyle engellenmiştir."
+            "Test sırasında kopyala, yapıştır ve sürükle-bırak işlemleri güvenlik nedeniyle engellenmiştir.",
+            "⚠️ Test sırasında Backspace, Delete ve yön tuşları (←↑→↓) kullanılamaz. Hatalı yazılan karakterler düzeltilemez!"
         ];
 
         function showAnnouncements() {
@@ -1127,14 +1128,163 @@
                 }
             }
 
-            testStarted = true;
-            startTime = new Date();
-            document.getElementById('testArea').disabled = false;
-            document.getElementById('testArea').focus();
-            document.getElementById('startBtn').disabled = true;
-            document.getElementById('finishBtn').disabled = false;
+            // Klavye düzeni kontrolü
+            const selectedKeyboard = document.getElementById('keyboardType').value;
+            checkKeyboardLayout(selectedKeyboard).then(passed => {
+                if (!passed) return;
+                
+                // Kontrolden geçti, testi başlat
+                testStarted = true;
+                startTime = new Date();
+                document.getElementById('testArea').disabled = false;
+                document.getElementById('testArea').focus();
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('finishBtn').disabled = false;
 
-            timerInterval = setInterval(updateTimer, 1000);
+                timerInterval = setInterval(updateTimer, 1000);
+            });
+        }
+
+        // Klavye düzeni kontrolü
+        function checkKeyboardLayout(selectedKeyboard) {
+            return new Promise((resolve) => {
+                let currentStep = 0;
+                let testChars;
+                
+                // F ve Q klavye için farklı test karakterleri
+                if (selectedKeyboard === 'F') {
+                    testChars = [
+                        { char: 'İ', key: 'U', finger: 'sağ orta parmak' },
+                        { char: 'Ş', key: 'Ş', finger: 'sağ serçe parmak' },
+                        { char: 'Ğ', key: 'Ğ', finger: 'sağ serçe parmak' }
+                    ];
+                } else {
+                    testChars = [
+                        { char: 'I', key: 'I', finger: 'sağ serçe parmak' },
+                        { char: 'Ş', key: 'Ş', finger: 'sağ serçe parmak' },
+                        { char: 'Ğ', key: 'Ğ', finger: 'sağ serçe parmak' }
+                    ];
+                }
+
+                function showTestStep() {
+                    const test = testChars[currentStep];
+                    
+                    Swal.fire({
+                        title: `<i class="fas fa-keyboard"></i> Klavye Düzeni Kontrolü`,
+                        html: `
+                            <div style="text-align: center;">
+                                <p style="font-size: 18px; margin-bottom: 20px;">
+                                    Seçtiğiniz klavye: <strong style="color: #dc3545;">${selectedKeyboard} Klavye</strong>
+                                </p>
+                                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                    <p style="margin: 0; font-size: 16px; color: #1976d2;">
+                                        <strong>Adım ${currentStep + 1} / ${testChars.length}</strong>
+                                    </p>
+                                </div>
+                                <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-bottom: 20px; text-align: left;">
+                                    <p style="margin: 0; font-size: 14px;">
+                                        <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i> 
+                                        <strong>Önemli:</strong> İşletim sisteminizin klavye düzeninin de <strong>${selectedKeyboard} Klavye</strong> olarak ayarlanmış olması gerekmektedir.
+                                    </p>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 20px;">
+                                    <p style="margin-bottom: 15px; font-weight: 600;">Lütfen aşağıdaki harfi klavyenizden yazın:</p>
+                                    <div style="background: #dc3545; color: white; padding: 20px; border-radius: 10px; font-size: 64px; font-weight: bold; margin-bottom: 15px;">
+                                        ${test.char}
+                                    </div>
+                                    <input type="text" id="keyboardTestInput" maxlength="1" 
+                                        style="width: 120px; height: 120px; font-size: 72px; text-align: center; border: 3px solid #dc3545; border-radius: 10px;"
+                                        autocomplete="off" />
+                                    <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                                        ${selectedKeyboard} Klavyede "<strong>${test.char}</strong>" harfi <strong>${test.key}</strong> tuşunda, <strong>${test.finger}</strong> ile yazılır.
+                                    </p>
+                                </div>
+                                <p style="margin-top: 20px; color: #666; font-size: 13px;">
+                                    Klavye düzeninizi değiştirmek için Windows'ta <kbd>Alt + Shift</kbd> veya <kbd>Win + Space</kbd> tuşlarını kullanabilirsiniz.
+                                </p>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        showCancelButton: true,
+                        cancelButtonText: 'İptal',
+                        cancelButtonColor: '#6c757d',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            const input = document.getElementById('keyboardTestInput');
+                            input.focus();
+
+                            // Klavye kontrolü
+                            input.addEventListener('keypress', function(e) {
+                                e.preventDefault();
+                                
+                                const typedChar = e.key;
+                                const expected = test.char;
+                                
+                                // Tam eşleşme kontrolü
+                                if (typedChar === expected || typedChar === expected.toLowerCase() || typedChar === expected.toUpperCase()) {
+                                    // Doğru karakter
+                                    input.style.borderColor = '#28a745';
+                                    input.style.background = '#d4edda';
+                                    input.value = expected;
+                                    
+                                    Swal.close();
+                                    
+                                    setTimeout(() => {
+                                        currentStep++;
+                                        
+                                        if (currentStep < testChars.length) {
+                                            // Sonraki adıma geç
+                                            showTestStep();
+                                        } else {
+                                            // Tüm testler başarılı
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Klavye Düzeni Onaylandı!',
+                                                text: 'Test başlatılıyor...',
+                                                timer: 1500,
+                                                showConfirmButton: false
+                                            }).then(() => {
+                                                resolve(true);
+                                            });
+                                        }
+                                    }, 300);
+                                } else {
+                                    // Yanlış karakter
+                                    input.value = '';
+                                    input.style.borderColor = '#dc3545';
+                                    input.style.background = '#ffe5e5';
+                                    
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Yanlış Klavye Düzeni!',
+                                        html: `
+                                            <div style="text-align: center;">
+                                                Beklenen: <strong style="font-size: 24px; color: #28a745;">"${expected}"</strong><br>
+                                                Yazdığınız: <strong style="font-size: 24px; color: #dc3545;">"${typedChar}"</strong>
+                                                <div style="margin-top: 15px; background: rgba(220,53,69,0.1); padding: 15px; border-radius: 10px;">
+                                                    Lütfen işletim sisteminizin klavye düzenini<br>
+                                                    <strong>${selectedKeyboard} Klavye</strong> olarak değiştirin
+                                                </div>
+                                            </div>
+                                        `,
+                                        confirmButtonColor: '#dc3545',
+                                        confirmButtonText: 'Tekrar Dene'
+                                    }).then(() => {
+                                        showTestStep();
+                                    });
+                                }
+                            });
+                        }
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.cancel) {
+                            resolve(false);
+                        }
+                    });
+                }
+
+                // İlk adımı başlat
+                showTestStep();
+            });
         }
 
         function updateTimer() {
@@ -1169,10 +1319,81 @@
 
             // Prevent keyboard shortcuts (Ctrl+C, Ctrl+V, Ctrl+X)
             testArea.addEventListener('keydown', function (e) {
-                if (testStarted && (e.ctrlKey || e.metaKey)) {
-                    if (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a') {
+                if (testStarted) {
+                    // Ctrl/Cmd tuş kombinasyonlarını engelle
+                    if (e.ctrlKey || e.metaKey) {
+                        if (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a') {
+                            e.preventDefault();
+                            showCopyPasteWarning();
+                            return false;
+                        }
+                    }
+
+                    // Backspace (Silme) tuşunu engelle
+                    if (e.key === 'Backspace' || e.keyCode === 8) {
                         e.preventDefault();
-                        showCopyPasteWarning();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Silme Yasak!',
+                            text: 'Backspace tuşu kullanılamaz!',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                        return false;
+                    }
+
+                    // Delete tuşunu engelle
+                    if (e.key === 'Delete' || e.keyCode === 46) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Silme Yasak!',
+                            text: 'Delete tuşu kullanılamaz!',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                        return false;
+                    }
+
+                    // Yön tuşlarını engelle (Sol, Sağ, Yukarı, Aşağı)
+                    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || 
+                        e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
+                        e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Yön Tuşları Yasak!',
+                            text: 'Yön tuşları kullanılamaz!',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                        return false;
+                    }
+
+                    // Home, End, Page Up, Page Down tuşlarını engelle
+                    if (e.key === 'Home' || e.key === 'End' || 
+                        e.key === 'PageUp' || e.key === 'PageDown' ||
+                        e.keyCode === 36 || e.keyCode === 35 || e.keyCode === 33 || e.keyCode === 34) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Navigasyon Yasak!',
+                            text: 'Navigasyon tuşları kullanılamaz!',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
                         return false;
                     }
                 }
